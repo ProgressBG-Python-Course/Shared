@@ -1,0 +1,18 @@
+name: File Size Check 
+
+on: 
+  push:  
+    branches: [ main ]  
+
+jobs:
+  check_file_sizes:
+    runs-on: ubuntu-latest 
+
+    steps:
+      - uses: actions/checkout@v3  # Check out the repository code
+      - name: Check for large files
+        run: |  
+          if [ $(find . -type f -size +100k | wc -l) -gt 0 ]; then
+            echo "::error file=file-size-check.yml::Files larger than 100KB found. Please remove them before committing."
+            exit 1
+          fi
